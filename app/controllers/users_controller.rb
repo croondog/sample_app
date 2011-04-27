@@ -1,6 +1,12 @@
 class UsersController < ApplicationController
   before_filter :authenticate, :only => [:index, :edit, :update]
   before_filter :correct_user, :only => [:edit, :update]
+  before_filter :admin_user,   :only => :destroy
+
+  def index
+    @title = "All users"
+    @users = User.paginate(:page => params[:page])
+  end
 
   def show
     @user = User.find(params[:id])
@@ -19,19 +25,19 @@ class UsersController < ApplicationController
       redirect_to @user, :flash => { :success => "Welcome to the Sample App!" }
     else
       @title = "Sign up"
-      @user.password = ""
-      @user.password_confirmation = ""
+      #26APR-@user.password = ""
+      #26APR-@user.password_confirmation = ""
       render 'new'
     end
   end
 
   def edit
-    @user = User.find(params[:id])
+    #26APR-@user = User.find(params[:id])
     @title = "Edit user"
   end
 
   def update
-    @user = User.find(params[:id])
+    #26APR-@user = User.find(params[:id])
     if @user.update_attributes(params[:user])
       redirect_to @user, :flash => { :success => "Profile updated" }
     else
@@ -40,24 +46,27 @@ class UsersController < ApplicationController
     end
   end
 
-  def index
-    @title = "All users"
-    @users = User.paginate(:page => params[:page])
-  end
 
-  def show
-    @user = User.find(params[:id])
-    @title = @user.name
+  def destroy
+    User.find(params[:id]).destroy
+    redirect_to users_path, :flash => { :success => "User destroyed." }
+    #26APR-redirect_to users_path
   end
 
   private
 
-    def authenticate
-      deny_access unless signed_in?
-    end
+    #26APR def authenticate
+    #26APR   deny_access unless signed_in?
+    #26APR end
  
     def correct_user
       @user = User.find(params[:id])
       redirect_to(root_path) unless current_user?(@user)
     end
+  
+    def admin_user
+      redirect_to(root_path) if current_user && !current_user.admin?
+      redirect_to(signin_path) if !current_user
+    end
+
 end

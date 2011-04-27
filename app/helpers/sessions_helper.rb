@@ -2,7 +2,7 @@ module SessionsHelper
 
   def sign_in(user)
     cookies.permanent.signed[:remember_token] = [user.id, user.salt]
-    current_user = user
+    self.current_user = user
   end
 
   def current_user=(user)
@@ -25,6 +25,10 @@ module SessionsHelper
   def current_user?(user)
     user == current_user
   end
+
+  def authenticate #26APR
+    deny_access unless signed_in? #26APR
+  end #26APR
 
   def deny_access
     store_location
