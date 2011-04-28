@@ -26,9 +26,9 @@ module SessionsHelper
     user == current_user
   end
 
-  def authenticate #26APR
-    deny_access unless signed_in? #26APR
-  end #26APR
+  def authenticate
+    deny_access unless signed_in?
+  end
 
   def deny_access
     store_location
