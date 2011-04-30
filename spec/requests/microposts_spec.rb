@@ -28,7 +28,7 @@ describe "Microposts" do
       it "should make a new micropost" do
         content = "Why is this message latin?"
         lambda do
-          visit_root_path
+          visit root_path
           fill_in :micropost_content, :with => content
           click_button
           response.should have_selector("span.content", :content => content)
